@@ -38,19 +38,33 @@ Dashboard | Yamamay CRM
             </div>
 
 
-            <a
-                href="{% url 'logout' %}"
-                class="user-avatar"
-                aria-label="Logout"
-                title="Logout"
+            <form
+                method="post"
+                action="{% url 'logout' %}"
+                class="logout-form"
             >
-                {{ request.user.first_name|first|default:"Y" }}
-            </a>
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="user-avatar"
+                    aria-label="Logout"
+                    title="Logout"
+                >
+                    {{ request.user.first_name|first|default:"Y" }}
+                </button>
+
+            </form>
 
         </div>
 
     </header>
 
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
 
     <main class="app-main">
 
