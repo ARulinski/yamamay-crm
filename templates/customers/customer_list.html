@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}
+Customers | Yamamay CRM
+{% endblock %}
+
+{% block content %}
+
+<div class="app-shell">
+
+    <!-- HEADER -->
+
+ <header class="app-header">
+
+    <div class="header-brand">
+
+        <div class="brand-small">
+            yamamay
+        </div>
+
+    </div>
+
+
+    <div class="header-user">
+
+        <div class="header-user-info">
+
+            <strong>
+                {{ request.user.first_name|default:request.user.username }}
+            </strong>
+
+            <span>
+                CRM
+            </span>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="user-avatar"
+            aria-label="User menu"
+        >
+            {{ request.user.first_name|first|default:"Y" }}
+        </button>
+
+    </div>
+
+</header>
+
+
+    <main class="app-main">
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    CLIENTELING
+                </p>
+
+                <h1>
+                    Customers
+                </h1>
+
+            </div>
+
+
+            <a
+                href="{% url 'customer_create' %}"
+                class="small-add-button"
+                aria-label="Add customer"
+            >
+                +
+            </a>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <form
+            method="get"
+            class="search-form"
+        >
+
+            <input
+                type="search"
+                name="q"
+                value="{{ query }}"
+                placeholder="Search customers..."
+                autocomplete="off"
+            >
+
+        </form>
+
+
+        <!-- CUSTOMER LIST -->
+
+        <div class="customer-list">
+
+            {% for customer in customers %}
+
+                <a
+                    href="{% url 'customer_detail' customer.pk %}"
+                    class="customer-card"
+                >
+
+                    <!-- AVATAR -->
+
+                    <div class="customer-avatar">
+
+                        {{ customer.first_name|first }}
+                        {{ customer.last_name|first }}
+
+                    </div>
+
+
+                    <!-- CUSTOMER DETAILS -->
+
+                    <div class="customer-info">
+
+                        <strong>
+                            {{ customer.full_name }}
+                        </strong>
+
+
+                        <span>
+
+                            {% if customer.phone %}
+
+                                {{ customer.full_phone_number }}
+
+                            {% else %}
+
+                                No phone number
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- ARROW -->
+
+                    <div class="customer-arrow">
+                        ›
+                    </div>
+
+                </a>
+
+
+            {% empty %}
+
+                <!-- EMPTY STATE -->
+
+                <div class="empty-state">
+
+                    <h3>
+                        No customers yet
+                    </h3>
+
+                    <p>
+                        Your customer database will appear here.
+                    </p>
+
+
+                    <a
+                        href="{% url 'customer_create' %}"
+                        class="primary-button"
+                    >
+                        Add first customer
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+
+    <!-- NEW GLOBAL BOTTOM NAV -->
+
+    {% include "includes/bottom_nav.html" with active_page="customers" %}
+
+</div>
+
+{% endblock %}

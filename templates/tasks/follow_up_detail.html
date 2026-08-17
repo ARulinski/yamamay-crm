@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+
+{% block title %}
+Follow-up | {{ customer.full_name }}
+{% endblock %}
+
+{% block content %}
+
+<div class="app-shell">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="app-header app-header-back">
+
+        <a
+            href="{% url 'follow_up_list' %}"
+            class="back-button"
+            aria-label="Back"
+        >
+            ‹
+        </a>
+
+
+        <div class="header-brand">
+
+            <div class="brand-small">
+                yamamay
+            </div>
+
+        </div>
+
+
+        <div class="header-user">
+
+            <div class="header-user-info">
+
+                <strong>
+                    {{ request.user.first_name|default:request.user.username }}
+                </strong>
+
+                <span>
+                    CRM
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="user-avatar"
+                aria-label="User menu"
+            >
+                {{ request.user.first_name|first|default:"Y" }}
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="app-main">
+
+        <!-- =================================================
+             HERO
+             ================================================= -->
+
+        <section class="detail-hero">
+
+            <div class="detail-hero-icon">
+                ✓
+            </div>
+
+            <p class="eyebrow">
+                FOLLOW-UP
+            </p>
+
+            <h1>
+                {{ follow_up.title }}
+            </h1>
+
+
+            <a
+                href="{% url 'customer_detail' customer.pk %}"
+                class="detail-customer-link"
+            >
+                {{ customer.full_name }}
+            </a>
+
+        </section>
+
+
+        <!-- =================================================
+             FOLLOW-UP DETAILS
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <div class="profile-section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        FOLLOW-UP
+                    </p>
+
+                    <h2 class="profile-section-title">
+                        Details
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Title
+                </span>
+
+                <strong>
+                    {{ follow_up.title }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Type
+                </span>
+
+                <strong>
+                    {{ follow_up.get_follow_up_type_display }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Due Date
+                </span>
+
+                <strong>
+
+                    {% if follow_up.due_date %}
+
+                        {{ follow_up.due_date|date:"d F Y" }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Due Time
+                </span>
+
+                <strong>
+
+                    {% if follow_up.due_time %}
+
+                        {{ follow_up.due_time|time:"H:i" }}
+
+                    {% else %}
+
+                        All day
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Status
+                </span>
+
+                <strong>
+
+                    {% if follow_up.status %}
+
+                        {{ follow_up.get_status_display }}
+
+                    {% else %}
+
+                        Pending
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Assigned To
+                </span>
+
+                <strong>
+
+                    {% if follow_up.assigned_to %}
+
+                        {{ follow_up.assigned_to.first_name|default:follow_up.assigned_to.username }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             NOTES
+             ================================================= -->
+
+        {% if follow_up.notes %}
+
+            <section class="profile-card">
+
+                <p class="eyebrow">
+                    NOTES
+                </p>
+
+                <p class="detail-notes">
+                    {{ follow_up.notes|linebreaksbr }}
+                </p>
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             CUSTOMER
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <div class="profile-section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        CUSTOMER
+                    </p>
+
+                    <h2 class="profile-section-title">
+                        Contact
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Name
+                </span>
+
+                <strong>
+                    {{ customer.full_name }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Phone
+                </span>
+
+                <strong>
+
+                    {% if customer.phone %}
+
+                        {{ customer.full_phone_number }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Email
+                </span>
+
+                <strong>
+                    {{ customer.email|default:"—" }}
+                </strong>
+
+            </div>
+
+
+            {% if customer.preferred_store %}
+
+                <div class="profile-row">
+
+                    <span>
+                        Preferred Store
+                    </span>
+
+                    <strong>
+                        {{ customer.preferred_store }}
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+
+            <a
+                href="{% url 'customer_detail' customer.pk %}"
+                class="primary-button"
+            >
+                View Customer Profile
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         BOTTOM NAVIGATION
+         ===================================================== -->
+
+    {% include "includes/bottom_nav.html" with active_page="followups" %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+
+{% block title %}
+Purchase | {{ customer.full_name }}
+{% endblock %}
+
+{% block content %}
+
+<div class="app-shell">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="app-header app-header-back">
+
+        <a
+            href="{% url 'customer_detail' customer.pk %}"
+            class="back-button"
+            aria-label="Back"
+        >
+            ‹
+        </a>
+
+
+        <div class="header-brand">
+
+            <div class="brand-small">
+                yamamay
+            </div>
+
+        </div>
+
+
+        <div class="header-user">
+
+            <div class="header-user-info">
+
+                <strong>
+                    {{ request.user.first_name|default:request.user.username }}
+                </strong>
+
+                <span>
+                    CRM
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="user-avatar"
+                aria-label="User menu"
+            >
+                {{ request.user.first_name|first|default:"Y" }}
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="app-main">
+
+        <!-- =================================================
+             HERO
+             ================================================= -->
+
+        <section class="detail-hero">
+
+            <div class="detail-hero-icon">
+                £
+            </div>
+
+            <p class="eyebrow">
+                PURCHASE
+            </p>
+
+            <h1>
+
+                {% if purchase.purchase_value %}
+
+                    £{{ purchase.purchase_value|floatformat:2 }}
+
+                {% else %}
+
+                    Purchase
+
+                {% endif %}
+
+            </h1>
+
+
+            <a
+                href="{% url 'customer_detail' customer.pk %}"
+                class="detail-customer-link"
+            >
+                {{ customer.full_name }}
+            </a>
+
+        </section>
+
+
+        <!-- =================================================
+             PURCHASE DETAILS
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <div class="profile-section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        PURCHASE
+                    </p>
+
+                    <h2 class="profile-section-title">
+                        Details
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Purchase Date
+                </span>
+
+                <strong>
+
+                    {% if purchase.purchase_date %}
+
+                        {{ purchase.purchase_date|date:"d F Y" }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Value
+                </span>
+
+                <strong>
+
+                    {% if purchase.purchase_value %}
+
+                        £{{ purchase.purchase_value|floatformat:2 }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Category
+                </span>
+
+                <strong>
+
+                    {% if purchase.purchase_category %}
+
+                        {{ purchase.get_purchase_category_display }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Quantity
+                </span>
+
+                <strong>
+
+                    {% if purchase.purchase_quantity %}
+
+                        {{ purchase.purchase_quantity }}
+                        item{{ purchase.purchase_quantity|pluralize }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Store
+                </span>
+
+                <strong>
+                    {{ purchase.purchase_store|default:"—" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Receipt / Order Ref
+                </span>
+
+                <strong>
+                    {{ purchase.purchase_reference|default:"—" }}
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             NOTES
+             ================================================= -->
+
+        {% if purchase.notes %}
+
+            <section class="profile-card">
+
+                <p class="eyebrow">
+                    NOTES
+                </p>
+
+                <p class="detail-notes">
+                    {{ purchase.notes|linebreaksbr }}
+                </p>
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             RECORD
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <p class="eyebrow">
+                RECORD
+            </p>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Created
+                </span>
+
+                <strong>
+                    {{ purchase.created_at|date:"d M Y, H:i" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Created By
+                </span>
+
+                <strong>
+
+                    {% if purchase.created_by %}
+
+                        {{ purchase.created_by.first_name|default:purchase.created_by.username }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         BOTTOM NAVIGATION
+         ===================================================== -->
+
+    {% include "includes/bottom_nav.html" with active_page="customers" %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block title %}
+Appointments | Yamamay CRM
+{% endblock %}
+
+{% block content %}
+
+<div class="app-shell">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="app-header">
+
+        <div class="header-brand">
+
+            <div class="brand-small">
+                yamamay
+            </div>
+
+        </div>
+
+
+        <div class="header-user">
+
+            <div class="header-user-info">
+
+                <strong>
+                    {{ request.user.first_name|default:request.user.username }}
+                </strong>
+
+                <span>
+                    CRM
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="user-avatar"
+                aria-label="User menu"
+            >
+                {{ request.user.first_name|first|default:"Y" }}
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="app-main">
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <section class="followup-page-header">
+
+            <p class="eyebrow">
+                CLIENTELING
+            </p>
+
+            <h1>
+                Appointments
+            </h1>
+
+            <p class="muted">
+                View and manage scheduled customer appointments.
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
+             FILTERS
+             ================================================= -->
+
+        <div class="followup-filters">
+
+            <a
+                href="?range=today"
+                class="followup-filter {% if selected_filter == 'today' %}active{% endif %}"
+            >
+                Today
+            </a>
+
+
+            <a
+                href="?range=tomorrow"
+                class="followup-filter {% if selected_filter == 'tomorrow' %}active{% endif %}"
+            >
+                Tomorrow
+            </a>
+
+
+            <a
+                href="?range=week"
+                class="followup-filter {% if selected_filter == 'week' %}active{% endif %}"
+            >
+                Next 7 days
+            </a>
+
+
+            <a
+                href="?range=month"
+                class="followup-filter {% if selected_filter == 'month' %}active{% endif %}"
+            >
+                Next 30 days
+            </a>
+
+
+            <a
+                href="?range=all"
+                class="followup-filter {% if selected_filter == 'all' %}active{% endif %}"
+            >
+                All Upcoming
+            </a>
+
+
+            <a
+                href="?range=past"
+                class="followup-filter {% if selected_filter == 'past' %}active{% endif %}"
+            >
+                Past
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             APPOINTMENT LIST
+             ================================================= -->
+
+        <section class="followup-list">
+
+            {% for appointment in appointments %}
+
+                <a
+                    href="{% url 'appointment_detail' appointment.pk %}"
+                    class="followup-card"
+                >
+
+                    <!-- CARD TOP -->
+
+                    <div class="followup-card-top">
+
+                        <div>
+
+                            <span class="followup-type">
+                                Appointment
+                            </span>
+
+                            <h3>
+                                {{ appointment.customer.full_name }}
+                            </h3>
+
+                        </div>
+
+
+                        <div class="followup-date-box">
+
+                            {% if appointment.appointment_date %}
+
+                                <strong>
+                                    {{ appointment.appointment_date|date:"d" }}
+                                </strong>
+
+                                <span>
+                                    {{ appointment.appointment_date|date:"M" }}
+                                </span>
+
+                            {% else %}
+
+                                <strong>
+                                    —
+                                </strong>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PURPOSE -->
+
+                    <p class="followup-title">
+
+                        {% if appointment.appointment_purpose %}
+
+                            {{ appointment.appointment_purpose }}
+
+                        {% else %}
+
+                            Customer appointment
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <!-- NOTES PREVIEW -->
+
+                    {% if appointment.notes %}
+
+                        <p class="followup-notes">
+                            {{ appointment.notes|truncatechars:100 }}
+                        </p>
+
+                    {% endif %}
+
+
+                    <!-- FOOTER -->
+
+                    <div class="followup-card-footer">
+
+                        <span>
+
+                            {% if appointment.appointment_time %}
+
+                                ◷ {{ appointment.appointment_time|time:"H:i" }}
+
+                            {% else %}
+
+                                All day
+
+                            {% endif %}
+
+                        </span>
+
+
+                        {% if appointment.appointment_location %}
+
+                            <span>
+                                {{ appointment.appointment_location }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- EXTRA -->
+
+                    {% if appointment.appointment_duration %}
+
+                        <div class="appointment-extra">
+
+                            Duration:
+                            {{ appointment.appointment_duration }}
+                            min
+
+                        </div>
+
+                    {% endif %}
+
+                </a>
+
+
+            {% empty %}
+
+                <div class="dashboard-empty">
+
+                    <div class="dashboard-empty-icon">
+                        ◷
+                    </div>
+
+                    <strong>
+                        No appointments
+                    </strong>
+
+                    <p>
+                        No appointments match this time period.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         BOTTOM NAVIGATION
+         ===================================================== -->
+
+    {% include "includes/bottom_nav.html" with active_page="appointments" %}
+
+</div>
+
+{% endblock %}

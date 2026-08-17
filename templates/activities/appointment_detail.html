@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}
+Appointment | {{ customer.full_name }}
+{% endblock %}
+
+{% block content %}
+
+<div class="app-shell">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="app-header app-header-back">
+
+        <a
+            href="{% url 'customer_detail' customer.pk %}"
+            class="back-button"
+            aria-label="Back"
+        >
+            ‹
+        </a>
+
+
+        <div class="header-brand">
+
+            <div class="brand-small">
+                yamamay
+            </div>
+
+        </div>
+
+
+        <div class="header-user">
+
+            <div class="header-user-info">
+
+                <strong>
+                    {{ request.user.first_name|default:request.user.username }}
+                </strong>
+
+                <span>
+                    CRM
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="user-avatar"
+                aria-label="User menu"
+            >
+                {{ request.user.first_name|first|default:"Y" }}
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="app-main">
+
+        <!-- =================================================
+             HERO
+             ================================================= -->
+
+        <section class="detail-hero">
+
+            <div class="detail-hero-icon">
+                ◷
+            </div>
+
+            <p class="eyebrow">
+                APPOINTMENT
+            </p>
+
+            <h1>
+
+                {% if appointment.appointment_purpose %}
+
+                    {{ appointment.appointment_purpose }}
+
+                {% else %}
+
+                    Customer Appointment
+
+                {% endif %}
+
+            </h1>
+
+
+            <a
+                href="{% url 'customer_detail' customer.pk %}"
+                class="detail-customer-link"
+            >
+                {{ customer.full_name }}
+            </a>
+
+        </section>
+
+
+        <!-- =================================================
+             APPOINTMENT DETAILS
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <div class="profile-section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        APPOINTMENT
+                    </p>
+
+                    <h2 class="profile-section-title">
+                        Details
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Date
+                </span>
+
+                <strong>
+
+                    {% if appointment.appointment_date %}
+
+                        {{ appointment.appointment_date|date:"d F Y" }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Time
+                </span>
+
+                <strong>
+
+                    {% if appointment.appointment_time %}
+
+                        {{ appointment.appointment_time|time:"H:i" }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Duration
+                </span>
+
+                <strong>
+
+                    {% if appointment.appointment_duration %}
+
+                        {{ appointment.appointment_duration }}
+                        minutes
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Purpose
+                </span>
+
+                <strong>
+                    {{ appointment.appointment_purpose|default:"—" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Store / Location
+                </span>
+
+                <strong>
+                    {{ appointment.appointment_location|default:"—" }}
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             NOTES
+             ================================================= -->
+
+        {% if appointment.notes %}
+
+            <section class="profile-card">
+
+                <p class="eyebrow">
+                    NOTES
+                </p>
+
+                <p class="detail-notes">
+                    {{ appointment.notes|linebreaksbr }}
+                </p>
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             RECORD INFORMATION
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <p class="eyebrow">
+                RECORD
+            </p>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Created
+                </span>
+
+                <strong>
+                    {{ appointment.created_at|date:"d M Y, H:i" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Created By
+                </span>
+
+                <strong>
+
+                    {% if appointment.created_by %}
+
+                        {{ appointment.created_by.first_name|default:appointment.created_by.username }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         BOTTOM NAVIGATION
+         ===================================================== -->
+
+    {% include "includes/bottom_nav.html" with active_page="appointments" %}
+
+</div>
+
+{% endblock %}

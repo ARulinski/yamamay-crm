@@ -1,0 +1,493 @@
+{% extends "base.html" %}
+
+{% block title %}
+New Interaction | Yamamay CRM
+{% endblock %}
+
+{% block content %}
+
+<div class="app-shell">
+
+    <header class="form-header">
+
+        <a
+            href="{% url 'customer_detail' customer.pk %}"
+            class="form-back"
+        >
+            ‹
+        </a>
+
+        <div class="form-header-title">
+
+            <strong>
+                New Interaction
+            </strong>
+
+            <span>
+                {{ customer.full_name }}
+            </span>
+
+        </div>
+
+        <div class="brand-small">
+            yamamay
+        </div>
+
+    </header>
+
+
+    <main class="customer-form-page">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            {% if form.errors %}
+
+                <div class="form-errors">
+
+                    <strong>
+                        Please check the details below.
+                    </strong>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- INTERACTION -->
+
+            <section class="form-section">
+
+                <div class="form-section-heading">
+
+                    <span class="section-number">
+                        01
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Interaction
+                        </h2>
+
+                        <p>
+                            Record customer activity
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Interaction Type
+                    </label>
+
+                    {{ form.interaction_type }}
+
+                    {{ form.interaction_type.errors }}
+
+                </div>
+
+
+                <!-- APPOINTMENT FIELDS -->
+
+                <div
+                    id="appointment-fields"
+                    class="dynamic-fields"
+                >
+
+                    <div class="dynamic-section-title">
+                        Appointment Details
+                    </div>
+
+
+                    <div class="field-grid-2">
+
+                        <div class="crm-field">
+
+                            <label>
+                                Date
+                            </label>
+
+                            {{ form.appointment_date }}
+                            {{ form.appointment_date.errors }}
+
+                        </div>
+
+
+                        <div class="crm-field">
+
+                            <label>
+                                Time
+                            </label>
+
+                            {{ form.appointment_time }}
+                            {{ form.appointment_time.errors }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="crm-field">
+
+                        <label>
+                            Duration
+                        </label>
+
+                        {{ form.appointment_duration }}
+
+                        <small class="field-help">
+                            Duration in minutes
+                        </small>
+
+                    </div>
+
+
+                    <div class="crm-field">
+
+                        <label>
+                            Purpose
+                        </label>
+
+                        {{ form.appointment_purpose }}
+
+                    </div>
+
+
+                    <div class="crm-field">
+
+                        <label>
+                            Store / Location
+                        </label>
+
+                        {{ form.appointment_location }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- PURCHASE FIELDS -->
+
+                <div
+                    id="purchase-fields"
+                    class="dynamic-fields"
+                >
+
+                    <div class="dynamic-section-title">
+                        Purchase Details
+                    </div>
+
+
+                    <div class="field-grid-2">
+
+                        <div class="crm-field">
+
+                            <label>
+                                Purchase Date
+                            </label>
+
+                            {{ form.purchase_date }}
+                            {{ form.purchase_date.errors }}
+
+                        </div>
+
+
+                        <div class="crm-field">
+
+                            <label>
+                                Value (£)
+                            </label>
+
+                            {{ form.purchase_value }}
+                            {{ form.purchase_value.errors }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field-grid-2">
+
+                        <div class="crm-field">
+
+                            <label>
+                                Category
+                            </label>
+
+                            {{ form.purchase_category }}
+
+                        </div>
+
+
+                        <div class="crm-field">
+
+                            <label>
+                                Quantity
+                            </label>
+
+                            {{ form.purchase_quantity }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="crm-field">
+
+                        <label>
+                            Store
+                        </label>
+
+                        {{ form.purchase_store }}
+
+                    </div>
+
+
+                    <div class="crm-field">
+
+                        <label>
+                            Receipt / Order Reference
+                        </label>
+
+                        {{ form.purchase_reference }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Notes
+                    </label>
+
+                    {{ form.notes }}
+
+                </div>
+
+            </section>
+
+
+            <!-- FOLLOW UP -->
+
+            <section class="form-section">
+
+                <div class="form-section-heading">
+
+                    <span class="section-number">
+                        02
+                    </span>
+
+                    <div>
+
+                        <h2>
+                            Follow-up
+                        </h2>
+
+                        <p>
+                            Optional next action
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="follow-up-toggle">
+
+                    {{ form.create_follow_up }}
+
+                    <label
+                        for="{{ form.create_follow_up.id_for_label }}"
+                    >
+                        Create a follow-up
+                    </label>
+
+                </div>
+
+
+                <div
+                    id="follow-up-fields"
+                    class="follow-up-fields"
+                >
+
+                    <div class="crm-field">
+
+                        <label>
+                            Follow-up Title
+                        </label>
+
+                        {{ form.follow_up_title }}
+
+                        {{ form.follow_up_title.errors }}
+
+                    </div>
+
+
+                    <div class="crm-field">
+
+                        <label>
+                            Type
+                        </label>
+
+                        {{ form.follow_up_type }}
+
+                    </div>
+
+
+                    <div class="field-grid-2">
+
+                        <div class="crm-field">
+
+                            <label>
+                                Date
+                            </label>
+
+                            {{ form.follow_up_date }}
+
+                            {{ form.follow_up_date.errors }}
+
+                        </div>
+
+
+                        <div class="crm-field">
+
+                            <label>
+                                Time
+                            </label>
+
+                            {{ form.follow_up_time }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <div class="form-submit-area">
+
+                <button
+                    type="submit"
+                    class="save-customer-button"
+                >
+                    Save Interaction
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    const interactionType =
+        document.getElementById(
+            "id_interaction_type"
+        );
+
+    const appointmentFields =
+        document.getElementById(
+            "appointment-fields"
+        );
+
+    const purchaseFields =
+        document.getElementById(
+            "purchase-fields"
+        );
+
+    const followUpToggle =
+        document.getElementById(
+            "id_create_follow_up"
+        );
+
+    const followUpFields =
+        document.getElementById(
+            "follow-up-fields"
+        );
+
+
+    function updateInteractionFields() {
+
+        const selected =
+            interactionType.value;
+
+        appointmentFields.classList.remove(
+            "visible"
+        );
+
+        purchaseFields.classList.remove(
+            "visible"
+        );
+
+
+        if (selected === "appointment") {
+
+            appointmentFields.classList.add(
+                "visible"
+            );
+
+        }
+
+
+        if (selected === "purchase") {
+
+            purchaseFields.classList.add(
+                "visible"
+            );
+
+        }
+
+    }
+
+
+    function updateFollowUpFields() {
+
+        if (followUpToggle.checked) {
+
+            followUpFields.classList.add(
+                "visible"
+            );
+
+        } else {
+
+            followUpFields.classList.remove(
+                "visible"
+            );
+
+        }
+
+    }
+
+
+    interactionType.addEventListener(
+        "change",
+        updateInteractionFields
+    );
+
+    followUpToggle.addEventListener(
+        "change",
+        updateFollowUpFields
+    );
+
+
+    updateInteractionFields();
+    updateFollowUpFields();
+
+</script>
+
+{% endblock %}

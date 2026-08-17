@@ -1,0 +1,365 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard | Yamamay CRM
+{% endblock %}
+
+{% block content %}
+
+<div class="app-shell">
+
+    <!-- HEADER -->
+
+ <header class="app-header">
+
+    <div class="header-brand">
+
+        <div class="brand-small">
+            yamamay
+        </div>
+
+    </div>
+
+
+    <div class="header-user">
+
+        <div class="header-user-info">
+
+            <strong>
+                {{ request.user.first_name|default:request.user.username }}
+            </strong>
+
+            <span>
+                CRM
+            </span>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="user-avatar"
+            aria-label="User menu"
+        >
+            {{ request.user.first_name|first|default:"Y" }}
+        </button>
+
+    </div>
+
+</header>
+
+
+    <main class="app-main">
+
+        <!-- WELCOME -->
+
+        <section class="welcome-section">
+
+            <p class="eyebrow">
+                OVERVIEW
+            </p>
+
+            <h1>
+                {{ greeting }},
+                {{ request.user.first_name|default:request.user.username }}
+            </h1>
+
+            <p class="dashboard-date">
+                {{ today|date:"l, j F Y" }}
+            </p>
+
+            <p class="muted">
+                Here's what's happening today.
+            </p>
+
+        </section>
+
+
+        <!-- DASHBOARD STATS -->
+
+        <section class="stats-grid">
+
+            <!-- CUSTOMERS -->
+
+            <a
+                href="{% url 'customer_list' %}"
+                class="stat-card stat-card-link"
+            >
+
+                <span class="stat-number">
+                    {{ customer_count }}
+                </span>
+
+                <span class="stat-label">
+                    Customers
+                </span>
+
+            </a>
+
+
+            <!-- FOLLOW UPS -->
+
+            <a
+                href="{% url 'follow_up_list' %}?range=all"
+                class="stat-card stat-card-link"
+            >
+
+                <span class="stat-number">
+                    {{ pending_follow_up_count }}
+                </span>
+
+                <span class="stat-label">
+                    Follow-ups
+                </span>
+
+            </a>
+
+
+            <!-- APPOINTMENTS -->
+
+            <a
+                href="{% url 'appointment_list' %}"
+                class="stat-card stat-card-link"
+            >
+
+                <span class="stat-number">
+                    {{ appointment_count }}
+                </span>
+
+                <span class="stat-label">
+                    Appointments
+                </span>
+
+            </a>
+
+
+            <!-- INTERACTIONS -->
+
+            <article class="stat-card">
+
+                <span class="stat-number">
+                    {{ interaction_count }}
+                </span>
+
+                <span class="stat-label">
+                    Interactions
+                </span>
+
+            </article>
+
+        </section>
+
+
+        <!-- TODAY'S APPOINTMENTS -->
+
+        <section
+            class="section-block"
+            id="appointments-today"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        TODAY
+                    </p>
+
+                    <h2>
+                        Appointments
+                    </h2>
+
+                </div>
+
+
+                <a href="{% url 'appointment_list' %}">
+                    View all
+                </a>
+
+            </div>
+
+
+            {% for appointment in todays_appointments %}
+
+                <a
+                    href="{% url 'customer_detail' appointment.customer.pk %}"
+                    class="task-card task-card-link"
+                >
+
+                    <div class="task-indicator"></div>
+
+
+                    <div class="task-content">
+
+                        <strong>
+                            {{ appointment.customer.full_name }}
+                        </strong>
+
+                        <span>
+
+                            {% if appointment.appointment_purpose %}
+
+                                {{ appointment.appointment_purpose }}
+
+                            {% else %}
+
+                                Customer appointment
+
+                            {% endif %}
+
+                        </span>
+
+
+                        {% if appointment.appointment_location %}
+
+                            <small>
+                                {{ appointment.appointment_location }}
+                            </small>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <time>
+
+                        {% if appointment.appointment_time %}
+
+                            {{ appointment.appointment_time|time:"H:i" }}
+
+                        {% else %}
+
+                            All day
+
+                        {% endif %}
+
+                    </time>
+
+                </a>
+
+
+            {% empty %}
+
+                <div class="dashboard-empty">
+
+                    <div class="dashboard-empty-icon">
+                        ◷
+                    </div>
+
+                    <strong>
+                        No appointments today
+                    </strong>
+
+                    <p>
+                        Scheduled customer appointments will appear here.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+
+        <!-- TODAY'S FOLLOW UPS -->
+
+        <section class="section-block">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        TODAY
+                    </p>
+
+                    <h2>
+                        Follow-ups
+                    </h2>
+
+                </div>
+
+
+                <a href="{% url 'follow_up_list' %}">
+                    View all
+                </a>
+
+            </div>
+
+
+            {% for follow_up in todays_follow_ups %}
+
+                <a
+                    href="{% url 'customer_detail' follow_up.customer.pk %}"
+                    class="task-card task-card-link"
+                >
+
+                    <div class="task-indicator"></div>
+
+
+                    <div class="task-content">
+
+                        <strong>
+                            {{ follow_up.customer.full_name }}
+                        </strong>
+
+                        <span>
+                            {{ follow_up.title }}
+                        </span>
+
+                        <small>
+                            {{ follow_up.get_follow_up_type_display }}
+                        </small>
+
+                    </div>
+
+
+                    <time>
+
+                        {% if follow_up.due_time %}
+
+                            {{ follow_up.due_time|time:"H:i" }}
+
+                        {% else %}
+
+                            All day
+
+                        {% endif %}
+
+                    </time>
+
+                </a>
+
+
+            {% empty %}
+
+                <div class="dashboard-empty">
+
+                    <div class="dashboard-empty-icon">
+                        ✓
+                    </div>
+
+                    <strong>
+                        You're all caught up
+                    </strong>
+
+                    <p>
+                        No follow-ups scheduled for today.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+
+    <!-- GLOBAL BOTTOM NAVIGATION -->
+
+    {% include "includes/bottom_nav.html" with active_page="home" %}
+
+</div>
+
+{% endblock %}

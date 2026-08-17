@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+
+{% block title %}
+New Customer | Yamamay CRM
+{% endblock %}
+
+
+{% block content %}
+
+<div class="app-shell">
+
+    <!-- HEADER -->
+
+    <header class="form-header">
+
+        <a
+            href="{% url 'customer_list' %}"
+            class="form-back"
+        >
+            ‹
+        </a>
+
+        <div class="form-header-title">
+            <strong>New Customer</strong>
+            <span>Clienteling</span>
+        </div>
+
+        <div class="brand-small">
+            yamamay
+        </div>
+
+    </header>
+
+
+    <main class="customer-form-page">
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            {% if form.errors %}
+
+                <div class="form-errors">
+
+                    <strong>
+                        Please check the information below.
+                    </strong>
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+
+
+            <!-- PERSONAL INFORMATION -->
+
+            <section class="form-section">
+
+                <div class="form-section-heading">
+
+                    <span class="section-number">
+                        01
+                    </span>
+
+                    <div>
+                        <h2>Personal Information</h2>
+
+                        <p>
+                            Basic customer details
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Salutation
+                    </label>
+
+                    {{ form.salutation }}
+
+                    {{ form.salutation.errors }}
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        First Name *
+                    </label>
+
+                    {{ form.first_name }}
+
+                    {{ form.first_name.errors }}
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Last Name *
+                    </label>
+
+                    {{ form.last_name }}
+
+                    {{ form.last_name.errors }}
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Birthday
+                    </label>
+
+                    <div class="field-grid-2">
+
+                        {{ form.birthday_day }}
+
+                        {{ form.birthday_month }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Email Address
+                    </label>
+
+                    {{ form.email }}
+
+                    {{ form.email.errors }}
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ADDRESS -->
+
+            <section class="form-section">
+
+                <div class="form-section-heading">
+
+                    <span class="section-number">
+                        02
+                    </span>
+
+                    <div>
+                        <h2>Address</h2>
+
+                        <p>
+                            Customer residence
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Country / Region
+                    </label>
+
+                    {{ form.country }}
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Address Line 1
+                    </label>
+
+                    {{ form.address_line_1 }}
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Address Line 2
+                    </label>
+
+                    {{ form.address_line_2 }}
+
+                </div>
+
+
+                <div class="field-grid-2">
+
+                    <div class="crm-field">
+
+                        <label>
+                            Post Code
+                        </label>
+
+                        {{ form.postcode }}
+
+                    </div>
+
+
+                    <div class="crm-field">
+
+                        <label>
+                            City / Town
+                        </label>
+
+                        {{ form.city }}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- PHONE -->
+
+            <section class="form-section">
+
+                <div class="form-section-heading">
+
+                    <span class="section-number">
+                        03
+                    </span>
+
+                    <div>
+                        <h2>Phone</h2>
+
+                        <p>
+                            Contact information
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="phone-grid">
+
+                    <div class="crm-field">
+
+                        <label>
+                            Country Code
+                        </label>
+
+                        {{ form.phone_country_code }}
+
+                    </div>
+
+
+                    <div class="crm-field">
+
+                        <label>
+                            Phone
+                        </label>
+
+                        {{ form.phone }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Phone Type
+                    </label>
+
+                    {{ form.phone_type }}
+
+                </div>
+
+            </section>
+
+
+
+            <!-- IMPORTANT DATES -->
+
+            <section class="form-section">
+
+                <div class="form-section-heading">
+
+                    <span class="section-number">
+                        04
+                    </span>
+
+                    <div>
+                        <h2>Important Dates</h2>
+
+                        <p>
+                            Useful clienteling reminders
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Anniversary
+                    </label>
+
+                    {{ form.anniversary }}
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Spouse Birthday
+                    </label>
+
+                    <div class="field-grid-2">
+
+                        {{ form.spouse_birthday_day }}
+
+                        {{ form.spouse_birthday_month }}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ADDITIONAL -->
+
+            <section class="form-section">
+
+                <div class="form-section-heading">
+
+                    <span class="section-number">
+                        05
+                    </span>
+
+                    <div>
+                        <h2>Additional Information</h2>
+
+                        <p>
+                            CRM and clienteling details
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Nationality
+                    </label>
+
+                    {{ form.nationality }}
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Preferred Store
+                    </label>
+
+                    {{ form.preferred_store }}
+
+                </div>
+
+
+                <div class="crm-field">
+
+                    <label>
+                        Internal Notes
+                    </label>
+
+                    {{ form.notes }}
+
+                </div>
+
+            </section>
+
+
+
+            <!-- SAVE -->
+
+            <div class="form-submit-area">
+
+                <button
+                    type="submit"
+                    class="save-customer-button"
+                >
+                    Create Customer
+                </button>
+
+                <p>
+                    The customer will be assigned to
+                    <strong>
+                        {{ request.user.first_name|default:request.user.username }}
+                    </strong>
+                </p>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+{% endblock %}

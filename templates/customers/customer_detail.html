@@ -1,0 +1,1335 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ customer.full_name }} | Yamamay CRM
+{% endblock %}
+
+{% block content %}
+
+<div class="app-shell">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="app-header app-header-back">
+
+    <a
+        href="{% url 'customer_list' %}"
+        class="back-button"
+        aria-label="Back"
+    >
+        ‹
+    </a>
+
+
+    <div class="header-brand">
+
+        <div class="brand-small">
+            yamamay
+        </div>
+
+    </div>
+
+
+    <div class="header-user">
+
+        <div class="header-user-info">
+
+            <strong>
+                {{ request.user.first_name|default:request.user.username }}
+            </strong>
+
+            <span>
+                CRM
+            </span>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="user-avatar"
+            aria-label="User menu"
+        >
+            {{ request.user.first_name|first|default:"Y" }}
+        </button>
+
+    </div>
+
+</header>
+
+
+    <main class="app-main">
+
+
+        <!-- =================================================
+             CUSTOMER HEADER
+             ================================================= -->
+
+        <section class="customer-profile-header">
+
+            <div class="customer-avatar-large">
+
+                {{ customer.first_name|first }}
+                {{ customer.last_name|first }}
+
+            </div>
+
+            <p class="eyebrow">
+                CUSTOMER PROFILE
+            </p>
+
+            <h1>
+                {{ customer.full_name }}
+            </h1>
+
+            <p>
+
+                {% if customer.preferred_store %}
+
+                    {{ customer.preferred_store }}
+
+                {% else %}
+
+                    Yamamay Customer
+
+                {% endif %}
+
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
+             QUICK ACTIONS
+             ================================================= -->
+
+        <section class="profile-actions">
+
+            {% if customer.phone %}
+
+                <a
+                    href="tel:{{ customer.phone_country_code }}{{ customer.phone }}"
+                    class="profile-action"
+                >
+                    ☎
+                    <span>
+                        Call
+                    </span>
+                </a>
+
+            {% else %}
+
+                <div class="profile-action">
+
+                    ☎
+
+                    <span>
+                        Call
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            {% if customer.email %}
+
+                <a
+                    href="mailto:{{ customer.email }}"
+                    class="profile-action"
+                >
+
+                    ✉
+
+                    <span>
+                        Email
+                    </span>
+
+                </a>
+
+            {% else %}
+
+                <div class="profile-action">
+
+                    ✉
+
+                    <span>
+                        Email
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            <a
+                href="{% url 'interaction_create' customer.pk %}"
+                class="profile-action"
+            >
+
+                ＋
+
+                <span>
+                    Interaction
+                </span>
+
+            </a>
+
+        </section>
+
+
+        <!-- =================================================
+             CUSTOMER VALUE
+             ================================================= -->
+
+        <section class="customer-value-section">
+
+            <div class="customer-value-heading">
+
+                <p class="eyebrow">
+                    CUSTOMER VALUE
+                </p>
+
+                <h2>
+                    Purchase Overview
+                </h2>
+
+            </div>
+
+
+            <div class="customer-value-grid">
+
+
+                <div class="customer-value-card primary">
+
+                    <span>
+                        Total Spend
+                    </span>
+
+                    <strong>
+                        £{{ total_spend|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="customer-value-card">
+
+                    <span>
+                        Purchases
+                    </span>
+
+                    <strong>
+                        {{ purchase_count }}
+                    </strong>
+
+                </div>
+
+
+                <div class="customer-value-card">
+
+                    <span>
+                        Average Spend
+                    </span>
+
+                    <strong>
+                        £{{ average_spend|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="customer-value-card">
+
+                    <span>
+                        Last Purchase
+                    </span>
+
+                    <strong>
+
+                        {% if latest_purchase and latest_purchase.purchase_date %}
+
+                            {{ latest_purchase.purchase_date|date:"d M Y" }}
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FOLLOW UPS
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <div class="profile-section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        FOLLOW-UPS
+                    </p>
+
+                    <h2 class="profile-section-title">
+                        Upcoming
+                    </h2>
+
+                </div>
+
+
+                <a href="{% url 'interaction_create' customer.pk %}">
+                    + Add
+                </a>
+
+            </div>
+
+
+            {% for follow_up in follow_ups %}
+
+                <a
+                    href="{% url 'follow_up_detail' follow_up.pk %}"
+                    class="follow-up-item follow-up-item-link"
+                    aria-label="View follow-up: {{ follow_up.title }}"
+                >
+
+                    <div>
+
+                        <strong>
+                            {{ follow_up.title }}
+                        </strong>
+
+                        <span>
+                            {{ follow_up.get_follow_up_type_display }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="follow-up-date">
+
+                        {{ follow_up.due_date|date:"d M" }}
+
+                        {% if follow_up.due_time %}
+
+                            <small>
+                                {{ follow_up.due_time|time:"H:i" }}
+                            </small>
+
+                        {% endif %}
+
+                    </div>
+
+                </a>
+
+            {% empty %}
+
+                <p class="muted">
+                    No upcoming follow-ups.
+                </p>
+
+            {% endfor %}
+
+        </section>
+
+
+        <!-- =================================================
+             APPOINTMENTS
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <div class="profile-section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        APPOINTMENTS
+                    </p>
+
+                    <h2 class="profile-section-title">
+                        Appointment History
+                    </h2>
+
+                </div>
+
+
+                <a href="{% url 'interaction_create' customer.pk %}">
+                    + Add
+                </a>
+
+            </div>
+
+
+            <div class="profile-history-list">
+
+                {% for appointment in appointments %}
+
+                    <a
+                        href="{% url 'appointment_detail' appointment.pk %}"
+                        class="profile-history-row"
+                    >
+
+                        <div class="history-date-icon">
+
+                            {% if appointment.appointment_date %}
+
+                                <strong>
+                                    {{ appointment.appointment_date|date:"d" }}
+                                </strong>
+
+                                <span>
+                                    {{ appointment.appointment_date|date:"M" }}
+                                </span>
+
+                            {% else %}
+
+                                <strong>
+                                    —
+                                </strong>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="history-main">
+
+                            <strong>
+
+                                {% if appointment.appointment_purpose %}
+
+                                    {{ appointment.appointment_purpose }}
+
+                                {% else %}
+
+                                    Customer appointment
+
+                                {% endif %}
+
+                            </strong>
+
+
+                            <span>
+
+                                {% if appointment.appointment_time %}
+
+                                    {{ appointment.appointment_time|time:"H:i" }}
+
+                                {% else %}
+
+                                    All day
+
+                                {% endif %}
+
+
+                                {% if appointment.appointment_location %}
+
+                                    · {{ appointment.appointment_location }}
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="history-arrow">
+                            ›
+                        </div>
+
+                    </a>
+
+                {% empty %}
+
+                    <p class="muted">
+                        No appointments recorded.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PURCHASES
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <div class="profile-section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        PURCHASES
+                    </p>
+
+                    <h2 class="profile-section-title">
+                        Purchase History
+                    </h2>
+
+                </div>
+
+
+                <a href="{% url 'interaction_create' customer.pk %}">
+                    + Add
+                </a>
+
+            </div>
+
+
+            <div class="profile-history-list">
+
+                {% for purchase in purchases %}
+
+                    <a
+                        href="{% url 'purchase_detail' purchase.pk %}"
+                        class="profile-history-row"
+                    >
+
+                        <div class="purchase-list-icon">
+                            £
+                        </div>
+
+
+                        <div class="history-main">
+
+                            <strong>
+
+                                {% if purchase.purchase_category %}
+
+                                    {{ purchase.get_purchase_category_display }}
+
+                                {% else %}
+
+                                    Purchase
+
+                                {% endif %}
+
+                            </strong>
+
+
+                            <span>
+
+                                {% if purchase.purchase_date %}
+
+                                    {{ purchase.purchase_date|date:"d M Y" }}
+
+                                {% endif %}
+
+
+                                {% if purchase.purchase_quantity %}
+
+                                    · {{ purchase.purchase_quantity }}
+                                    item{{ purchase.purchase_quantity|pluralize }}
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="purchase-list-value">
+
+                            {% if purchase.purchase_value %}
+
+                                £{{ purchase.purchase_value }}
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="history-arrow">
+                            ›
+                        </div>
+
+                    </a>
+
+                {% empty %}
+
+                    <p class="muted">
+                        No purchases recorded.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ACTIVITY
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <div class="profile-section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        ACTIVITY
+                    </p>
+
+                    <h2 class="profile-section-title">
+                        Interaction History
+                    </h2>
+
+                </div>
+
+
+                <a href="{% url 'interaction_create' customer.pk %}">
+                    + Add
+                </a>
+
+            </div>
+
+
+            <div class="activity-history">
+
+                {% for interaction in interactions %}
+
+                    <article class="activity-record">
+
+
+                        <!-- SUMMARY -->
+
+                        <div class="activity-record-main">
+
+                            <div class="activity-record-icon">
+
+                                {% if interaction.interaction_type == "call" %}
+
+                                    ☎
+
+                                {% elif interaction.interaction_type == "email" %}
+
+                                    ✉
+
+                                {% elif interaction.interaction_type == "whatsapp" %}
+
+                                    ◉
+
+                                {% elif interaction.interaction_type == "purchase" %}
+
+                                    £
+
+                                {% elif interaction.interaction_type == "appointment" %}
+
+                                    ◷
+
+                                {% elif interaction.interaction_type == "store_visit" %}
+
+                                    ⌂
+
+                                {% else %}
+
+                                    •
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="activity-record-summary">
+
+
+                                <div class="activity-record-title">
+
+                                    <strong>
+                                        {{ interaction.get_interaction_type_display }}
+                                    </strong>
+
+                                    <time>
+                                        {{ interaction.created_at|date:"d M Y" }}
+                                    </time>
+
+                                </div>
+
+
+                                <span class="activity-summary-text">
+
+                                    {% if interaction.interaction_type == "purchase" %}
+
+                                        {% if interaction.purchase_value %}
+                                            £{{ interaction.purchase_value }}
+                                        {% endif %}
+
+                                        {% if interaction.purchase_category %}
+                                            · {{ interaction.get_purchase_category_display }}
+                                        {% endif %}
+
+
+                                    {% elif interaction.interaction_type == "appointment" %}
+
+                                        {% if interaction.appointment_purpose %}
+
+                                            {{ interaction.appointment_purpose }}
+
+                                        {% else %}
+
+                                            Customer appointment
+
+                                        {% endif %}
+
+
+                                        {% if interaction.appointment_time %}
+
+                                            · {{ interaction.appointment_time|time:"H:i" }}
+
+                                        {% endif %}
+
+
+                                    {% elif interaction.notes %}
+
+                                        {{ interaction.notes|truncatechars:70 }}
+
+
+                                    {% else %}
+
+                                        Customer interaction
+
+                                    {% endif %}
+
+                                </span>
+
+
+                                <small>
+
+                                    {% if interaction.created_by %}
+
+                                        Added by
+                                        {{ interaction.created_by.first_name|default:interaction.created_by.username }}
+
+                                        ·
+
+                                    {% endif %}
+
+                                    {{ interaction.created_at|date:"H:i" }}
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- EXPANDABLE DETAILS -->
+
+                        <details class="activity-details">
+
+                            <summary>
+
+                                <span class="details-label">
+                                    View details
+                                </span>
+
+                                <span class="details-chevron">
+                                    ↓
+                                </span>
+
+                            </summary>
+
+
+                            <div class="activity-details-content">
+
+
+                                <!-- APPOINTMENT DETAILS -->
+
+                                {% if interaction.interaction_type == "appointment" %}
+
+                                    <div class="activity-detail-grid">
+
+
+                                        <div>
+
+                                            <span>
+                                                Date
+                                            </span>
+
+                                            <strong>
+
+                                                {% if interaction.appointment_date %}
+
+                                                    {{ interaction.appointment_date|date:"d M Y" }}
+
+                                                {% else %}
+
+                                                    —
+
+                                                {% endif %}
+
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <span>
+                                                Time
+                                            </span>
+
+                                            <strong>
+
+                                                {% if interaction.appointment_time %}
+
+                                                    {{ interaction.appointment_time|time:"H:i" }}
+
+                                                {% else %}
+
+                                                    —
+
+                                                {% endif %}
+
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <span>
+                                                Duration
+                                            </span>
+
+                                            <strong>
+
+                                                {% if interaction.appointment_duration %}
+
+                                                    {{ interaction.appointment_duration }} min
+
+                                                {% else %}
+
+                                                    —
+
+                                                {% endif %}
+
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <span>
+                                                Location
+                                            </span>
+
+                                            <strong>
+                                                {{ interaction.appointment_location|default:"—" }}
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <!-- PURCHASE DETAILS -->
+
+                                {% if interaction.interaction_type == "purchase" %}
+
+                                    <div class="activity-detail-grid">
+
+
+                                        <div>
+
+                                            <span>
+                                                Value
+                                            </span>
+
+                                            <strong>
+
+                                                {% if interaction.purchase_value %}
+
+                                                    £{{ interaction.purchase_value }}
+
+                                                {% else %}
+
+                                                    —
+
+                                                {% endif %}
+
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <span>
+                                                Date
+                                            </span>
+
+                                            <strong>
+
+                                                {% if interaction.purchase_date %}
+
+                                                    {{ interaction.purchase_date|date:"d M Y" }}
+
+                                                {% else %}
+
+                                                    —
+
+                                                {% endif %}
+
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <span>
+                                                Quantity
+                                            </span>
+
+                                            <strong>
+                                                {{ interaction.purchase_quantity|default:"—" }}
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <span>
+                                                Store
+                                            </span>
+
+                                            <strong>
+                                                {{ interaction.purchase_store|default:"—" }}
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {% if interaction.purchase_reference %}
+
+                                        <div class="activity-reference">
+
+                                            <span>
+                                                Receipt / Reference
+                                            </span>
+
+                                            <strong>
+                                                {{ interaction.purchase_reference }}
+                                            </strong>
+
+                                        </div>
+
+                                    {% endif %}
+
+                                {% endif %}
+
+
+                                <!-- FULL NOTES -->
+
+                                {% if interaction.notes %}
+
+                                    <div class="activity-full-notes">
+
+                                        <span>
+                                            Notes
+                                        </span>
+
+                                        <p>
+                                            {{ interaction.notes|linebreaksbr }}
+                                        </p>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                {% if not interaction.notes and interaction.interaction_type != "appointment" and interaction.interaction_type != "purchase" %}
+
+                                    <p class="activity-no-details">
+                                        No additional details recorded.
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+                        </details>
+
+                    </article>
+
+
+                {% empty %}
+
+                    <div class="profile-empty-state">
+
+                        <div class="dashboard-empty-icon">
+                            +
+                        </div>
+
+                        <strong>
+                            No activity yet
+                        </strong>
+
+                        <p>
+                            Customer interactions will appear here.
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CONTACT
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <p class="eyebrow">
+                CONTACT
+            </p>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Phone
+                </span>
+
+                <strong>
+
+                    {% if customer.phone %}
+
+                        {{ customer.full_phone_number }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Email
+                </span>
+
+                <strong>
+                    {{ customer.email|default:"—" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Phone Type
+                </span>
+
+                <strong>
+
+                    {% if customer.phone_type %}
+
+                        {{ customer.get_phone_type_display }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PERSONAL
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <p class="eyebrow">
+                PERSONAL DETAILS
+            </p>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Birthday
+                </span>
+
+                <strong>
+
+                    {% if customer.birthday_day and customer.birthday_month %}
+
+                        {{ customer.birthday_day }}/{{ customer.birthday_month }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Anniversary
+                </span>
+
+                <strong>
+
+                    {% if customer.anniversary %}
+
+                        {{ customer.anniversary|date:"d M Y" }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Nationality
+                </span>
+
+                <strong>
+                    {{ customer.nationality|default:"—" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Spouse Birthday
+                </span>
+
+                <strong>
+
+                    {% if customer.spouse_birthday_day and customer.spouse_birthday_month %}
+
+                        {{ customer.spouse_birthday_day }}/{{ customer.spouse_birthday_month }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ADDRESS
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <p class="eyebrow">
+                ADDRESS
+            </p>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Country
+                </span>
+
+                <strong>
+                    {{ customer.country|default:"—" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Address
+                </span>
+
+                <strong>
+
+                    {% if customer.address_line_1 %}
+
+                        {{ customer.address_line_1 }}
+
+                        {% if customer.address_line_2 %}
+
+                            <br>
+                            {{ customer.address_line_2 }}
+
+                        {% endif %}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    City
+                </span>
+
+                <strong>
+                    {{ customer.city|default:"—" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Post Code
+                </span>
+
+                <strong>
+                    {{ customer.postcode|default:"—" }}
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CLIENTELING
+             ================================================= -->
+
+        <section class="profile-card">
+
+            <p class="eyebrow">
+                CLIENTELING
+            </p>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Preferred Store
+                </span>
+
+                <strong>
+                    {{ customer.preferred_store|default:"—" }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-row">
+
+                <span>
+                    Assigned To
+                </span>
+
+                <strong>
+
+                    {% if customer.assigned_to %}
+
+                        {{ customer.assigned_to.first_name|default:customer.assigned_to.username }}
+
+                    {% else %}
+
+                        —
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CUSTOMER NOTES
+             ================================================= -->
+
+        {% if customer.notes %}
+
+            <section class="profile-card">
+
+                <p class="eyebrow">
+                    CUSTOMER NOTES
+                </p>
+
+                <p class="detail-notes">
+                    {{ customer.notes|linebreaksbr }}
+                </p>
+
+            </section>
+
+        {% endif %}
+
+    </main>
+
+
+    {% include "includes/bottom_nav.html" with active_page="customers" %}
+
+</div>
+
+{% endblock %}

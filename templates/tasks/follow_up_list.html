@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}
+Follow-ups | Yamamay CRM
+{% endblock %}
+
+{% block content %}
+
+<div class="app-shell">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="app-header">
+
+        <div class="header-brand">
+
+            <div class="brand-small">
+                yamamay
+            </div>
+
+        </div>
+
+
+        <div class="header-user">
+
+            <div class="header-user-info">
+
+                <strong>
+                    {{ request.user.first_name|default:request.user.username }}
+                </strong>
+
+                <span>
+                    CRM
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="user-avatar"
+                aria-label="User menu"
+            >
+                {{ request.user.first_name|first|default:"Y" }}
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <main class="app-main">
+
+        <!-- =================================================
+             PAGE HEADER
+             ================================================= -->
+
+        <section class="followup-page-header">
+
+            <p class="eyebrow">
+                CLIENTELING
+            </p>
+
+            <h1>
+                Follow-ups
+            </h1>
+
+            <p class="muted">
+                Manage upcoming customer activity and reminders.
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
+             FILTERS
+             ================================================= -->
+
+        <div class="followup-filters">
+
+            <a
+                href="?range=overdue"
+                class="followup-filter {% if selected_filter == 'overdue' %}active{% endif %}"
+            >
+                Overdue
+            </a>
+
+
+            <a
+                href="?range=today"
+                class="followup-filter {% if selected_filter == 'today' %}active{% endif %}"
+            >
+                Today
+            </a>
+
+
+            <a
+                href="?range=tomorrow"
+                class="followup-filter {% if selected_filter == 'tomorrow' %}active{% endif %}"
+            >
+                Tomorrow
+            </a>
+
+
+            <a
+                href="?range=week"
+                class="followup-filter {% if selected_filter == 'week' %}active{% endif %}"
+            >
+                Next 7 days
+            </a>
+
+
+            <a
+                href="?range=month"
+                class="followup-filter {% if selected_filter == 'month' %}active{% endif %}"
+            >
+                Next 30 days
+            </a>
+
+
+            <a
+                href="?range=all"
+                class="followup-filter {% if selected_filter == 'all' %}active{% endif %}"
+            >
+                All
+            </a>
+
+
+            <a
+                href="?range=completed"
+                class="followup-filter {% if selected_filter == 'completed' %}active{% endif %}"
+            >
+                Completed
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             FOLLOW-UP LIST
+             ================================================= -->
+
+        <section class="followup-list">
+
+            {% for follow_up in follow_ups %}
+
+                <a
+                    href="{% url 'follow_up_detail' follow_up.pk %}"
+                    class="followup-card"
+                >
+
+                    <!-- CARD HEADER -->
+
+                    <div class="followup-card-top">
+
+                        <div>
+
+                            <span class="followup-type">
+                                {{ follow_up.get_follow_up_type_display }}
+                            </span>
+
+                            <h3>
+                                {{ follow_up.customer.full_name }}
+                            </h3>
+
+                        </div>
+
+
+                        <div class="followup-date-box">
+
+                            {% if follow_up.due_date %}
+
+                                <strong>
+                                    {{ follow_up.due_date|date:"d" }}
+                                </strong>
+
+                                <span>
+                                    {{ follow_up.due_date|date:"M" }}
+                                </span>
+
+                            {% else %}
+
+                                <strong>
+                                    —
+                                </strong>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TITLE -->
+
+                    <p class="followup-title">
+                        {{ follow_up.title }}
+                    </p>
+
+
+                    <!-- NOTES PREVIEW -->
+
+                    {% if follow_up.notes %}
+
+                        <p class="followup-notes">
+                            {{ follow_up.notes|truncatechars:100 }}
+                        </p>
+
+                    {% endif %}
+
+
+                    <!-- CARD FOOTER -->
+
+                    <div class="followup-card-footer">
+
+                        <span>
+
+                            {% if follow_up.due_time %}
+
+                                ◷ {{ follow_up.due_time|time:"H:i" }}
+
+                            {% else %}
+
+                                All day
+
+                            {% endif %}
+
+                        </span>
+
+
+                        <span>
+
+                            {% if follow_up.status == "completed" %}
+
+                                Completed
+
+                            {% elif follow_up.due_date and follow_up.due_date < today %}
+
+                                Overdue
+
+                            {% else %}
+
+                                Pending
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    {% if follow_up.assigned_to %}
+
+                        <div class="appointment-extra">
+
+                            Assigned to
+                            {{ follow_up.assigned_to.first_name|default:follow_up.assigned_to.username }}
+
+                        </div>
+
+                    {% endif %}
+
+                </a>
+
+
+            {% empty %}
+
+                <div class="dashboard-empty">
+
+                    <div class="dashboard-empty-icon">
+                        ✓
+                    </div>
+
+                    <strong>
+                        Nothing here
+                    </strong>
+
+                    <p>
+                        No follow-ups match this time period.
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         BOTTOM NAVIGATION
+         ===================================================== -->
+
+    {% include "includes/bottom_nav.html" with active_page="followups" %}
+
+</div>
+
+{% endblock %}
