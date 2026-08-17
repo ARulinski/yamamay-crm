@@ -17,9 +17,9 @@ class Customer(models.Model):
         WORK = "work", "Work"
         OTHER = "other", "Other"
 
-    # --------------------------------------------------
+    # ======================================================
     # PERSONAL INFORMATION
-    # --------------------------------------------------
+    # ======================================================
 
     salutation = models.CharField(
         max_length=10,
@@ -29,13 +29,14 @@ class Customer(models.Model):
 
     first_name = models.CharField(
         max_length=100,
+        blank=True,
     )
 
     last_name = models.CharField(
         max_length=100,
+        blank=True,
     )
 
-    # Birthday in the example only asks for day + month.
     birthday_day = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
@@ -50,9 +51,9 @@ class Customer(models.Model):
         blank=True,
     )
 
-    # --------------------------------------------------
+    # ======================================================
     # ADDRESS
-    # --------------------------------------------------
+    # ======================================================
 
     country = models.CharField(
         max_length=100,
@@ -80,9 +81,9 @@ class Customer(models.Model):
         blank=True,
     )
 
-    # --------------------------------------------------
+    # ======================================================
     # PHONE
-    # --------------------------------------------------
+    # ======================================================
 
     phone_country_code = models.CharField(
         max_length=10,
@@ -102,9 +103,9 @@ class Customer(models.Model):
         blank=True,
     )
 
-    # --------------------------------------------------
+    # ======================================================
     # IMPORTANT DATES
-    # --------------------------------------------------
+    # ======================================================
 
     anniversary = models.DateField(
         null=True,
@@ -121,18 +122,18 @@ class Customer(models.Model):
         blank=True,
     )
 
-    # --------------------------------------------------
+    # ======================================================
     # ADDITIONAL PERSONAL INFORMATION
-    # --------------------------------------------------
+    # ======================================================
 
     nationality = models.CharField(
         max_length=100,
         blank=True,
     )
 
-    # --------------------------------------------------
+    # ======================================================
     # CRM INFORMATION
-    # --------------------------------------------------
+    # ======================================================
 
     preferred_store = models.CharField(
         max_length=150,
@@ -151,9 +152,9 @@ class Customer(models.Model):
         related_name="customers",
     )
 
-    # --------------------------------------------------
+    # ======================================================
     # SYSTEM
-    # --------------------------------------------------
+    # ======================================================
 
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -172,34 +173,88 @@ class Customer(models.Model):
     def __str__(self):
         return self.full_name
 
+    # ======================================================
+    # DISPLAY NAME
+    # ======================================================
+
     @property
     def full_name(self):
+
+        name_parts = []
+
         if self.salutation:
-            return (
-                f"{self.get_salutation_display()} "
-                f"{self.first_name} "
-                f"{self.last_name}"
+            name_parts.append(
+                self.get_salutation_display()
             )
 
-        return f"{self.first_name} {self.last_name}"
+        if self.first_name:
+            name_parts.append(
+                self.first_name
+            )
+
+        if self.last_name:
+            name_parts.append(
+                self.last_name
+            )
+
+        if name_parts:
+            return " ".join(name_parts)
+
+        if self.phone:
+            return self.full_phone_number
+
+        if self.email:
+            return self.email
+
+        return "Unnamed Customer"
+
+    # ======================================================
+    # PHONE
+    # ======================================================
 
     @property
     def full_phone_number(self):
+
         if not self.phone:
             return ""
 
-        return f"{self.phone_country_code} {self.phone}".strip()
+        if self.phone_country_code:
+            return (
+                f"{self.phone_country_code} "
+                f"{self.phone}"
+            ).strip()
+
+        return self.phone
+
+    # ======================================================
+    # BIRTHDAY
+    # ======================================================
 
     @property
     def birthday_display(self):
-        if not self.birthday_day or not self.birthday_month:
+
+        if (
+            not self.birthday_day
+            or not self.birthday_month
+        ):
             return ""
 
-        return f"{self.birthday_day:02d}/{self.birthday_month:02d}"
+        return (
+            f"{self.birthday_day:02d}/"
+            f"{self.birthday_month:02d}"
+        )
+
+    # ======================================================
+    # SPOUSE BIRTHDAY
+    # ======================================================
 
     @property
     def spouse_birthday_display(self):
-        if not self.spouse_birthday_day or not self.spouse_birthday_month:
+
+        if (
+            not self.spouse_birthday_day
+            or not self.spouse_birthday_month
+        ):
             return ""
 
         return (

@@ -5,8 +5,15 @@ from .models import Customer
 
 class CustomerForm(forms.ModelForm):
 
-    BIRTHDAY_DAYS = [("", "Day")] + [
-        (i, str(i)) for i in range(1, 32)
+    # ======================================================
+    # CHOICES
+    # ======================================================
+
+    BIRTHDAY_DAYS = [
+        ("", "Day"),
+    ] + [
+        (i, str(i))
+        for i in range(1, 32)
     ]
 
     MONTHS = [
@@ -25,35 +32,55 @@ class CustomerForm(forms.ModelForm):
         (12, "December"),
     ]
 
-    birthday_day = forms.ChoiceField(
+    # ======================================================
+    # OPTIONAL DATE FIELDS
+    # ======================================================
+
+    birthday_day = forms.TypedChoiceField(
         choices=BIRTHDAY_DAYS,
         required=False,
+        coerce=int,
+        empty_value=None,
     )
 
-    birthday_month = forms.ChoiceField(
+    birthday_month = forms.TypedChoiceField(
         choices=MONTHS,
         required=False,
+        coerce=int,
+        empty_value=None,
     )
 
-    spouse_birthday_day = forms.ChoiceField(
+    spouse_birthday_day = forms.TypedChoiceField(
         choices=BIRTHDAY_DAYS,
         required=False,
+        coerce=int,
+        empty_value=None,
     )
 
-    spouse_birthday_month = forms.ChoiceField(
+    spouse_birthday_month = forms.TypedChoiceField(
         choices=MONTHS,
         required=False,
+        coerce=int,
+        empty_value=None,
     )
+
+    # ======================================================
+    # META
+    # ======================================================
 
     class Meta:
+
         model = Customer
 
         fields = [
             "salutation",
+
             "first_name",
             "last_name",
+
             "birthday_day",
             "birthday_month",
+
             "email",
 
             "country",
@@ -74,6 +101,7 @@ class CustomerForm(forms.ModelForm):
             "nationality",
 
             "preferred_store",
+
             "notes",
         ]
 
@@ -81,55 +109,66 @@ class CustomerForm(forms.ModelForm):
 
             "first_name": forms.TextInput(
                 attrs={
-                    "placeholder": "First Name *",
+                    "placeholder": "First Name",
+                    "autocomplete": "given-name",
                 }
             ),
 
             "last_name": forms.TextInput(
                 attrs={
-                    "placeholder": "Last Name *",
+                    "placeholder": "Last Name",
+                    "autocomplete": "family-name",
                 }
             ),
 
             "email": forms.EmailInput(
                 attrs={
                     "placeholder": "Email Address",
+                    "autocomplete": "email",
                 }
             ),
 
             "country": forms.TextInput(
                 attrs={
-                    "placeholder": "Country / Region of Residence",
+                    "placeholder": (
+                        "Country / Region of Residence"
+                    ),
+                    "autocomplete": "country-name",
                 }
             ),
 
             "address_line_1": forms.TextInput(
                 attrs={
                     "placeholder": "Address line 1",
+                    "autocomplete": "address-line1",
                 }
             ),
 
             "address_line_2": forms.TextInput(
                 attrs={
                     "placeholder": "Address line 2",
+                    "autocomplete": "address-line2",
                 }
             ),
 
             "postcode": forms.TextInput(
                 attrs={
                     "placeholder": "Post code",
+                    "autocomplete": "postal-code",
                 }
             ),
 
             "city": forms.TextInput(
                 attrs={
                     "placeholder": "City / Town",
+                    "autocomplete": "address-level2",
                 }
             ),
 
             "phone_country_code": forms.TextInput(
                 attrs={
                     "placeholder": "+44",
+                    "inputmode": "tel",
                 }
             ),
 
@@ -137,6 +176,7 @@ class CustomerForm(forms.ModelForm):
                 attrs={
                     "placeholder": "Phone",
                     "inputmode": "tel",
+                    "autocomplete": "tel",
                 }
             ),
 
@@ -148,7 +188,7 @@ class CustomerForm(forms.ModelForm):
 
             "nationality": forms.TextInput(
                 attrs={
-                    "placeholder": "Nationality / Passport",
+                    "placeholder": "Nationality",
                 }
             ),
 
@@ -160,8 +200,24 @@ class CustomerForm(forms.ModelForm):
 
             "notes": forms.Textarea(
                 attrs={
-                    "placeholder": "Customer notes...",
+                    "placeholder": (
+                        "Customer notes..."
+                    ),
                     "rows": 4,
                 }
             ),
         }
+
+    # ======================================================
+    # MAKE ALL CUSTOMER DETAILS OPTIONAL
+    # ======================================================
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(
+            *args,
+            **kwargs,
+        )
+
+        for field in self.fields.values():
+            field.required = False
