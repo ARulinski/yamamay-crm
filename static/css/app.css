@@ -309,17 +309,56 @@ a {
    ========================================================= */
 
 .app-header {
-    min-height: 76px;
+    position: relative;
+    z-index: 60;
 
-    padding: 16px 20px;
+    min-height: 72px;
+
+    padding: 13px 18px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    background: var(--white);
+    gap: 16px;
+
+    background: rgba(255, 255, 255, 0.97);
 
     border-bottom: 1px solid var(--border);
+
+    box-shadow:
+        0 2px 14px
+        rgba(0, 0, 0, 0.035);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+
+.app-header-back {
+    display: grid;
+
+    grid-template-columns:
+        42px
+        1fr
+        auto;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.header-brand {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+}
+
+
+.app-header-back .header-brand {
+    justify-content: flex-start;
 }
 
 
@@ -328,47 +367,160 @@ a {
     align-items: center;
     justify-content: center;
 
-    padding: 5px 10px;
+    padding: 7px 11px;
 
     background: var(--yamamay-red);
     color: var(--white);
 
-    font-size: 22px;
+    font-size: 20px;
+    font-weight: 750;
+
+    line-height: 1;
+
+    letter-spacing: -1.2px;
+}
+
+
+.header-user {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.header-user-info {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 2px;
+}
+
+
+.header-user-info strong {
+    max-width: 135px;
+
+    overflow: hidden;
+
+    color: var(--black);
+
+    font-size: 12px;
+    font-weight: 750;
+
+    line-height: 1.2;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.header-user-info span {
+    color: var(--text-muted);
+
+    font-size: 9px;
     font-weight: 700;
 
-    letter-spacing: -1.4px;
+    line-height: 1.2;
+
+    letter-spacing: 0.55px;
+
+    text-transform: uppercase;
 }
 
 
 .user-avatar {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
 
-    flex-shrink: 0;
+    flex: 0 0 42px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
+    padding: 0;
+
+    border: 0;
     border-radius: 50%;
 
     background: var(--black);
     color: var(--white);
 
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 800;
+
+    line-height: 1;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 0, 0, 0.10);
+
+    transition:
+        transform 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+.user-avatar:hover {
+    background: var(--charcoal);
+
+    box-shadow:
+        0 6px 16px
+        rgba(0, 0, 0, 0.14);
+}
+
+
+.user-avatar:active {
+    transform: scale(0.94);
+}
+
+
+.user-avatar:visited {
+    color: var(--white);
 }
 
 
 .back-button {
     width: 40px;
+    height: 40px;
 
     display: flex;
     align-items: center;
+    justify-content: center;
 
     color: var(--yamamay-red);
 
-    font-size: 35px;
+    border-radius: 50%;
+
+    font-size: 31px;
+    font-weight: 300;
+
     line-height: 1;
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.back-button:hover {
+    background: var(--yamamay-red-extra-soft);
+}
+
+
+.back-button:active {
+    transform: scale(0.92);
 }
 
 
@@ -3238,6 +3390,454 @@ a {
 
         margin-left: -8px;
         margin-right: -8px;
+    }
+
+}
+
+/* =========================================================
+   FINAL MOBILE COMFORT LAYER
+   Larger type, better tap targets, safer spacing
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .app-shell {
+        padding-bottom: 126px;
+    }
+
+
+    .app-main {
+        padding: 24px 16px;
+    }
+
+
+    .app-header {
+        min-height: 68px;
+
+        padding: 11px 14px;
+    }
+
+
+    .app-header-back {
+        grid-template-columns:
+            40px
+            1fr
+            40px;
+
+        gap: 8px;
+    }
+
+
+    .brand-small {
+        padding: 7px 10px;
+
+        font-size: 19px;
+    }
+
+
+    .header-user-info {
+        display: none;
+    }
+
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+
+        flex-basis: 40px;
+
+        font-size: 14px;
+    }
+
+
+    .back-button {
+        width: 38px;
+        height: 38px;
+
+        font-size: 30px;
+    }
+
+
+    .welcome-section {
+        margin-bottom: 28px;
+    }
+
+
+    .welcome-section h1,
+    .page-header h1,
+    .followup-page-header h1 {
+        font-size: 30px;
+
+        line-height: 1.12;
+
+        letter-spacing: -0.9px;
+    }
+
+
+    .dashboard-date {
+        font-size: 14px;
+    }
+
+
+    .muted {
+        font-size: 14px;
+
+        line-height: 1.45;
+    }
+
+
+    .stats-grid {
+        gap: 11px;
+    }
+
+
+    .stat-card {
+        min-height: 118px;
+
+        padding: 18px;
+    }
+
+
+    .stat-number {
+        font-size: 33px;
+    }
+
+
+    .stat-label {
+        font-size: 14px;
+    }
+
+
+    .section-heading h2 {
+        font-size: 23px;
+    }
+
+
+    .section-heading a {
+        min-height: 38px;
+
+        display: inline-flex;
+        align-items: center;
+
+        font-size: 13px;
+    }
+
+
+    .task-card {
+        min-height: 72px;
+
+        padding: 16px;
+    }
+
+
+    .task-content strong {
+        font-size: 15px;
+    }
+
+
+    .task-content span {
+        font-size: 13px;
+
+        line-height: 1.35;
+    }
+
+
+    .task-card time {
+        font-size: 13px;
+    }
+
+
+    .customer-card {
+        min-height: 74px;
+
+        padding: 15px 16px;
+    }
+
+
+    .customer-avatar {
+        width: 50px;
+        height: 50px;
+
+        font-size: 15px;
+    }
+
+
+    .customer-info strong {
+        font-size: 15px;
+    }
+
+
+    .customer-info span {
+        font-size: 13px;
+    }
+
+
+    .customer-profile-header {
+        padding-top: 22px;
+        padding-bottom: 28px;
+    }
+
+
+    .customer-avatar-large {
+        width: 88px;
+        height: 88px;
+
+        font-size: 27px;
+    }
+
+
+    .customer-profile-header h1 {
+        font-size: 30px;
+
+        line-height: 1.15;
+    }
+
+
+    .profile-actions {
+        gap: 9px;
+    }
+
+
+    .profile-action {
+        min-height: 88px;
+
+        padding: 16px 7px;
+
+        font-size: 21px;
+    }
+
+
+    .profile-action span {
+        font-size: 12px;
+    }
+
+
+    .profile-card,
+    .customer-value-section {
+        padding: 19px;
+
+        border-radius: 18px;
+    }
+
+
+    .profile-row {
+        min-height: 52px;
+
+        padding: 15px 0;
+
+        align-items: center;
+    }
+
+
+    .profile-row span {
+        font-size: 13px;
+    }
+
+
+    .profile-row strong {
+        max-width: 62%;
+
+        font-size: 14px;
+
+        line-height: 1.4;
+    }
+
+
+    .profile-section-title,
+    .customer-value-heading h2 {
+        font-size: 19px;
+    }
+
+
+    .profile-history-row {
+        min-height: 70px;
+
+        padding: 14px;
+    }
+
+
+    .history-date-icon,
+    .purchase-list-icon {
+        width: 48px;
+        height: 48px;
+
+        flex-basis: 48px;
+    }
+
+
+    .history-main strong {
+        font-size: 14px;
+    }
+
+
+    .history-main span {
+        font-size: 12px;
+    }
+
+
+    .purchase-list-value {
+        font-size: 14px;
+    }
+
+
+    .activity-record-main {
+        min-height: 70px;
+
+        padding: 14px;
+    }
+
+
+    .activity-record-title strong {
+        font-size: 14px;
+    }
+
+
+    .activity-summary-text {
+        font-size: 12px;
+    }
+
+
+    .activity-record-summary small {
+        font-size: 10px;
+    }
+
+
+    .activity-details summary {
+        min-height: 44px;
+
+        padding: 11px 14px;
+
+        font-size: 12px;
+    }
+
+
+    .activity-detail-grid strong,
+    .activity-reference strong {
+        font-size: 12px;
+    }
+
+
+    .activity-full-notes p {
+        font-size: 13px;
+    }
+
+
+    .followup-filter {
+        min-height: 42px;
+
+        display: inline-flex;
+        align-items: center;
+
+        padding: 10px 16px;
+
+        font-size: 12px;
+    }
+
+
+    .followup-card {
+        padding: 18px;
+    }
+
+
+    .followup-card h3 {
+        font-size: 18px;
+    }
+
+
+    .followup-title {
+        font-size: 14px;
+    }
+
+
+    .followup-notes {
+        font-size: 13px;
+    }
+
+
+    .crm-field input,
+    .crm-field select,
+    .crm-field textarea {
+        min-height: 54px;
+
+        font-size: 16px;
+    }
+
+
+    .save-customer-button,
+    .primary-button {
+        min-height: 56px;
+    }
+
+
+    .bottom-nav {
+        min-height: 88px;
+
+        padding:
+            8px
+            8px
+            max(10px, env(safe-area-inset-bottom));
+    }
+
+
+    .nav-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+
+    .nav-label {
+        font-size: 10px;
+    }
+
+
+    .nav-item {
+        min-height: 56px;
+    }
+
+
+    .nav-add {
+        width: 60px;
+        height: 60px;
+
+        top: -12px;
+    }
+
+}
+
+
+@media (max-width: 360px) {
+
+    .app-main {
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+
+    .welcome-section h1,
+    .page-header h1,
+    .followup-page-header h1 {
+        font-size: 27px;
+    }
+
+
+    .profile-card,
+    .customer-value-section {
+        padding: 16px;
+    }
+
+
+    .bottom-nav {
+        grid-template-columns:
+            1fr
+            1fr
+            64px
+            1fr
+            1fr;
+    }
+
+
+    .nav-label {
+        font-size: 9px;
     }
 
 }

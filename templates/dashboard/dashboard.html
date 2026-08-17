@@ -8,50 +8,55 @@ Dashboard | Yamamay CRM
 
 <div class="app-shell">
 
-    <!-- HEADER -->
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
- <header class="app-header">
+    <header class="app-header">
 
-    <div class="header-brand">
+        <div class="header-brand">
 
-        <div class="brand-small">
-            yamamay
-        </div>
-
-    </div>
-
-
-    <div class="header-user">
-
-        <div class="header-user-info">
-
-            <strong>
-                {{ request.user.first_name|default:request.user.username }}
-            </strong>
-
-            <span>
-                CRM
-            </span>
+            <div class="brand-small">
+                yamamay
+            </div>
 
         </div>
 
 
-        <button
-            type="button"
-            class="user-avatar"
-            aria-label="User menu"
-        >
-            {{ request.user.first_name|first|default:"Y" }}
-        </button>
+        <div class="header-user">
 
-    </div>
+            <div class="header-user-info">
 
-</header>
+                <strong>
+                    {{ request.user.first_name|default:request.user.username }}
+                </strong>
+
+                <span>
+                    CRM
+                </span>
+
+            </div>
+
+
+            <a
+                href="{% url 'logout' %}"
+                class="user-avatar"
+                aria-label="Logout"
+                title="Logout"
+            >
+                {{ request.user.first_name|first|default:"Y" }}
+            </a>
+
+        </div>
+
+    </header>
 
 
     <main class="app-main">
 
-        <!-- WELCOME -->
+        <!-- =================================================
+             WELCOME
+             ================================================= -->
 
         <section class="welcome-section">
 
@@ -75,7 +80,9 @@ Dashboard | Yamamay CRM
         </section>
 
 
-        <!-- DASHBOARD STATS -->
+        <!-- =================================================
+             DASHBOARD STATS
+             ================================================= -->
 
         <section class="stats-grid">
 
@@ -150,7 +157,9 @@ Dashboard | Yamamay CRM
         </section>
 
 
-        <!-- TODAY'S APPOINTMENTS -->
+        <!-- =================================================
+             TODAY'S APPOINTMENTS
+             ================================================= -->
 
         <section
             class="section-block"
@@ -182,7 +191,7 @@ Dashboard | Yamamay CRM
             {% for appointment in todays_appointments %}
 
                 <a
-                    href="{% url 'customer_detail' appointment.customer.pk %}"
+                    href="{% url 'appointment_detail' appointment.pk %}"
                     class="task-card task-card-link"
                 >
 
@@ -261,7 +270,9 @@ Dashboard | Yamamay CRM
         </section>
 
 
-        <!-- TODAY'S FOLLOW UPS -->
+        <!-- =================================================
+             TODAY'S FOLLOW UPS
+             ================================================= -->
 
         <section class="section-block">
 
@@ -290,7 +301,7 @@ Dashboard | Yamamay CRM
             {% for follow_up in todays_follow_ups %}
 
                 <a
-                    href="{% url 'customer_detail' follow_up.customer.pk %}"
+                    href="{% url 'follow_up_detail' follow_up.pk %}"
                     class="task-card task-card-link"
                 >
 
@@ -356,7 +367,9 @@ Dashboard | Yamamay CRM
     </main>
 
 
-    <!-- GLOBAL BOTTOM NAVIGATION -->
+    <!-- =====================================================
+         GLOBAL BOTTOM NAVIGATION
+         ===================================================== -->
 
     {% include "includes/bottom_nav.html" with active_page="home" %}
 
